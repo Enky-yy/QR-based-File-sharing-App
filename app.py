@@ -90,7 +90,7 @@ def generate_links(filename):
         'expiry' : time.time() + 600
     }
 
-    return f"/temp-download/{token}"
+    return redirect(f"/temp-download/{token}")
 
 @app.route('/temp-download/<token>')
 def temp_download(token):
