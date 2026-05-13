@@ -141,6 +141,92 @@ button {
   cursor: pointer;
 }
 
-#file-input{
+#file-input {
   display: none;
+}
+
+.preview-modal {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.8);
+
+  display: none;
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 1000;
+}
+
+.preview-content {
+  width: 80%;
+
+  height: 80%;
+
+  background: #1e1e1e;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  overflow: auto;
+}
+
+.preview-image {
+  max-width: 100%;
+
+  max-height: 100%;
+}
+
+.preview-video {
+  width: 100%;
+}
+
+.preview-pdf {
+  width: 100%;
+
+  height: 700px;
+}
+
+.preview-text {
+  white-space: pre-wrap;
+
+  color: white;
+}
+
+.preview-btn {
+  margin-right: 10px;
+
+  background: #444;
+
+  color: white;
+
+  border: none;
+
+  padding: 8px 12px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+#search-input {
+  width: 100%;
+
+  padding: 12px;
+
+  margin-bottom: 20px;
+
+  border-radius: 8px;
+
+  border: none;
+
+  background: #1e1e1e;
+
+  color: white;
+
+  font-size: 16px;
 }

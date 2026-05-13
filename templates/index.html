@@ -8,6 +8,7 @@
   </head>
   <body>
     <div class="list">
+      <input type="text" id="search-input" placeholder="Search files..." />
       <ul class="file-list">
         {% for file in files %}
         <li class="file-item">
@@ -15,7 +16,18 @@
             <a href="/generate-link/{{file.name}}">{{file.name}}</a>
             <span class="size">{{file.size}}</span>
           </div>
-          <form action="/delete/{{file.name}}" , method="post" id="delete-form">
+          <div>
+            <button
+              type="button"
+              class="preview-btn"
+              onclick="previewFile(
+                '{{file.name}}',
+                '{{file.type}}')"
+            >
+              Preview
+            </button>
+          </div>
+          <form action="/delete/{{file.name}}" method="post" id="delete-form">
             <button class="delete-btn">Delete</button>
           </form>
         </li>
@@ -23,6 +35,7 @@
       </ul>
       <div class="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
+        <div id="upload-stats"></div>
       </div>
       <form
         action="/upload"
@@ -37,12 +50,21 @@
 
         <input type="file" name="files" id="file-input" multiple />
       </form>
+
+      <div class="preview-modal" id="preview-modal">
+        <div class="preview-content">
+          <button id="close-preview">Close</button>
+
+          <div id="preview-area"></div>
+        </div>
+      </div>
     </div>
     <div class="right">
       <div class="qr">
         <img src="/static/qr.png" alt="" />
       </div>
     </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="/static/script.js"></script>
   </body>
 </html>
