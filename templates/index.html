@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Based File sharing</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="list">
+      <ul class="file-list">
+        {% for file in files %}
+        <li class="file-item">
+          <div>
+            <a href="/download/{{file.name}}">{{file.name}}</a>
+            <span class="size">{{file.size}}</span>
+          </div>
+          <form action="/delete/{{file.name}}" , method="post" id="delete-form">
+            <button class="delete-btn">Delete</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <form
+        action="/upload"
+        method="post"
+        id="upload-form"
+        enctype="multipart/form-data"
+      >
+        <div class="drop-zone" id="drop-zone">
+          <p>Drag & Drop</p>
+          <p>Click to Select</p>
+        </div>
+
+        <input type="file" name="files" id="file-input" multiple />
+      </form>
+    </div>
+    <div class="right">
+      <div class="qr">
+        <img src="/static/qr.png" alt="" />
+      </div>
+    </div>
+    <script src="/static/script.js"></script>
+  </body>
+</html>
