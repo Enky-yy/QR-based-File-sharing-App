@@ -1,11 +1,18 @@
-from flask import Flask , render_template , send_from_directory , redirect, request , jsonify
+from flask import Flask , render_template , send_from_directory , redirect, request , jsonify , session
 import socket
 import os 
 import qrcode
-
+import secrets, time
 app = Flask(__name__)
+print(os.environ.get('SECRET_KEY'))
+
+app_password = 'harsh123'
+
+app.secret_key = os.environ.get('SECRET_KEY')
 
 shared_folder = "shared"
+
+temporary_links={}
 
 def format_file_size(size):
 
@@ -23,8 +30,22 @@ def get_local_ip_add():
         s.close()
     return ip
 
+@app.route('/login', methods= ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form.get('password')
+
+        if password == app_password:
+            session['authenticated'] = True
+            return redirect('/')
+        
+    return render_template('login.html')
+
 @app.route('/')
 def choose_files():
+
+    if not session.get('authenticated'):
+        return redirect('/login')
     file_data = []
 
     for file in os.listdir(shared_folder):
@@ -60,9 +81,34 @@ def upload():
 
     return '', 200
 
-@app.route('/download/<filename>')
-def sharing(filename):
-    return send_from_directory(shared_folder, filename, as_attachment=True)
+
+@app.route('/generate-link/<filename>')
+def generate_links(filename):
+    token = secrets.token_urlsafe(16)
+    temporary_links[token]={
+        'file':filename,
+        'expiry' : time.time() + 600
+    }
+
+    return f"/temp-download/{token}"
+
+@app.route('/temp-download/<token>')
+def temp_download(token):
+    data = temporary_links.get(token)
+
+    if not data:
+        return 'invalid link'
+    
+    if time.time() > data['expiry']:
+        temporary_links.pop(token)
+
+        return 'Link Expired'
+    
+    return send_from_directory(shared_folder, data['file'])
+
+# @app.route('/download/<filename>')
+# def sharing(filename):
+#     return send_from_directory(shared_folder, filename, as_attachment=True)
 
 @app.route('/delete/<filename>', methods=['POST'])
 def delete_file(filename):

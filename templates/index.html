@@ -12,7 +12,7 @@
         {% for file in files %}
         <li class="file-item">
           <div>
-            <a href="/download/{{file.name}}">{{file.name}}</a>
+            <a href="/generate-link/{{file.name}}">{{file.name}}</a>
             <span class="size">{{file.size}}</span>
           </div>
           <form action="/delete/{{file.name}}" , method="post" id="delete-form">
