@@ -9,13 +9,23 @@ def init_db():
 
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS transfers (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       id TEXT PRIMARY KEY,
                        filename TEXT,
+                       original_filename TEXT,
                        ip TEXT,
                        device TEXT,
                        upload_time TEXT,
-                       expiry REAL
+                       expiry REAL,
+                       ocr_text TEXT
                         )
+                    ''')
+    
+    cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS users(
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username TEXT UNIQUE,
+                        password TEXT
+                        )   
                     ''')
     
     conn.commit()

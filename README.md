@@ -1,0 +1,1 @@
+install tesseract-git-eng on your system to access ocr Search

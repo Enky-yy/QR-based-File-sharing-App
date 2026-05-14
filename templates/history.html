@@ -10,10 +10,14 @@
 
     <table border="1">
       <tr>
+        <th>id</th>
         <th>Filename</th>
+        <th>Original_Filename</th>
         <th>IP</th>
         <th>Device</th>
         <th>Time</th>
+        <th>Expiry</th>
+        <th>ocr_text</th>
       </tr>
 
       {% for item in history %}
@@ -23,6 +27,10 @@
         <td>{{item[1]}}</td>
         <td>{{item[2]}}</td>
         <td>{{item[3]}}</td>
+        <td>{{item[4]}}</td>
+        <td>{{item[5]}}</td>
+        <td>{{item[6]}}</td>
+        <td>{{item[7]}}</td>
       </tr>
 
       {% endfor %}

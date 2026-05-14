@@ -43,7 +43,7 @@ function uploadfiles(files = fileInput.files) {
 
       const elapsed = (Date.now() - startTime) / 1000;
 
-      const speed = e.loaded / elapsed;
+      const speed = elapsed > 0 ? e.loaded / elapsed : 0;
 
       const remaining = (e.total - e.loaded) / speed;
 
@@ -74,12 +74,39 @@ socketio.on("file_updated", (files) => {
     li.className = "file-item";
     li.innerHTML = `
     <div>
-            <a href="/generate-link/${file.name}">${file.name}</a>
+            <a href="/generate-link/${file.stored_name}">${file.name}</a>
             <span class="size">${file.size}</span>
           </div>
-          <form action="/delete/${file.name}" , method="post" id="delete-form">
-            <button class="delete-btn">Delete</button>
-          </form>
+          <div class="actions">
+
+    <button
+
+        type="button"
+
+        class="preview-btn"
+
+        onclick="
+            previewFile(
+                '${file.stored_name}',
+                '${file.type}'
+            )
+        "
+    >
+        Preview
+    </button>
+
+    <form
+        action="/delete/${file.id}"
+        method="post"
+    >
+
+        <button class="delete-btn">
+            Delete
+        </button>
+
+    </form>
+
+</div>
     `;
     filelist.appendChild(li);
   });
@@ -152,6 +179,28 @@ searchInput.addEventListener("input", () => {
     const text = item.innerText.toLowerCase();
 
     if (text.includes(value)) {
+      item.style.display = "flex";
+    } else {
+      item.style.display = "none";
+    }
+  });
+});
+
+const aiSearch = document.getElementById("ai-search");
+
+aiSearch.addEventListener("input", async () => {
+  const query = aiSearch.value;
+  const response = await fetch(`/search?q=${query}`);
+
+  const results = await response.json();
+  console.log(results);
+
+  const items = document.querySelectorAll(".file-item");
+
+  items.forEach((item) => {
+    const filename = item.querySelector("a").innerHTML.trim();
+
+    if (results.some((result) => result.trim() === filename) || query === "") {
       item.style.display = "flex";
     } else {
       item.style.display = "none";

@@ -59,9 +59,11 @@ def get_file_data(shared_folder):
         if os.path.isfile(path):
             size = os.path.getsize(path)
             file_data.append({
-                'name': file,
+                'id': file.split('_',1)[0],
+                'name': file.split('_',1)[1],
+                'stored_name': file,
                 'size': format_file_size(size),
-                'type': get_file_type(file)
+                'type': get_file_type(file.split('_',1)[1])
             })
     return file_data
 

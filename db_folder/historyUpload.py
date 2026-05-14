@@ -2,7 +2,7 @@ import sqlite3
 database = 'db_folder/qrshare.db'
 import time
 
-def upload(x,y,z,p):
+def upload(x,y,z,p,q,r,s):
     conn = sqlite3.connect(database)
 
     cursor = conn.cursor()
@@ -10,17 +10,20 @@ def upload(x,y,z,p):
     cursor.execute('''
 
     INSERT INTO transfers (
+        id,
         filename,
+        original_filename,
         ip,
         device,
         upload_time,
-        expiry
+        expiry,
+        ocr_text
     )
 
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?,?,?,?)
 
     ''', (
-
+ 
         x,
 
         y,
@@ -29,7 +32,12 @@ def upload(x,y,z,p):
 
         p,
 
-        time.time() + 3600
+        q,
+
+        r,
+
+        time.time() + 3600,
+        s
     ))
 
     conn.commit()

@@ -9,10 +9,14 @@ def history():
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT filename,
+        SELECT id,
+               filename,
+               original_filename,
                ip,
                device,
-               upload_time
+               upload_time,
+               expiry,
+               ocr_text
         FROM transfers
         ORDER BY id DESC
     ''')

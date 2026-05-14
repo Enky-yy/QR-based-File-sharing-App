@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QR Based File sharing</title>
     <link rel="stylesheet" href="/static/style.css" />
+    <link rel="shortcut icon" href="/static/icon.png" type="image/png">
   </head>
   <body>
+    <div class="top-bar">
+      <p>Logged in as: {{session.username}}</p>
+
+      <a href="/logout"> Logout </a>
+    </div>
+
+    <input type="text" id="ai-search" placeholder="AI Search OCR content..." />
+
     <div class="list">
       <input type="text" id="search-input" placeholder="Search files..." />
       <ul class="file-list">
         {% for file in files %}
         <li class="file-item">
           <div>
-            <a href="/generate-link/{{file.name}}">{{file.name}}</a>
+            <a href="/generate-link/{{file.stored_name}}">{{file.name}}</a>
             <span class="size">{{file.size}}</span>
           </div>
           <div>
@@ -21,13 +30,13 @@
               type="button"
               class="preview-btn"
               onclick="previewFile(
-                '{{file.name}}',
+                '{{file.stored_name}}',
                 '{{file.type}}')"
             >
               Preview
             </button>
           </div>
-          <form action="/delete/{{file.name}}" method="post" id="delete-form">
+          <form action="/delete/{{file.id}}" method="post" id="delete-form">
             <button class="delete-btn">Delete</button>
           </form>
         </li>
