@@ -179,8 +179,6 @@ Scan the generated QR code from another device on the same network to access the
 
 ## Screenshots
 
-Add screenshots of:
-
 * Login Page
 * Upload Dashboard
 * QR Access
