@@ -16,7 +16,7 @@ jobs:
 
     env:
       SECRET_KEY: test-secret-key
-      ENCRYPTION_KEY: b'1wIZtgNb5qhYAZHy6HWkJ-TTeMq39mOq0P4gIFJUUg8='
+      ENCRYPTION_KEY: 1wIZtgNb5qhYAZHy6HWkJ-TTeMq39mOq0P4gIFJUUg8=
 
     strategy:
       fail-fast: false
