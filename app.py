@@ -19,14 +19,17 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 # print(os.environ.get('SECRET_KEY'))
 
-# app.secret_key = os.environ.get('SECRET_KEY')
+app.secret_key = os.environ.get('SECRET_KEY')
 # use export SECRET_KEY="YOUR_SECRET_KEY" before starting app to use upper version of secret key
 
-# ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
 # use export ENCRYPTION_KEY="YOUR_ENCRYPTION_KEY" before starting app to use upper version of secret key
 
-app.secret_key = 'key'
-ENCRYPTION_KEY = b'key'
+# app.secret_key = 'key'
+# ENCRYPTION_KEY = b'key'
+
+# with open ('secrets.txt', 'r')as f:
+#     ENCRYPTION_KEY=f.read(-1)
 
 cipher = Fernet(ENCRYPTION_KEY)
 

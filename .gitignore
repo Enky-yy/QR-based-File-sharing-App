@@ -1,1 +1,11 @@
 node_modules/
+venv/
+**pycache**/
+*.pyc
+.env
+shared/*
+!shared/.gitkeep
+instance/
+*.db
+static/qr.png
+secrets.txt
