@@ -266,9 +266,9 @@ if __name__ == '__main__':
     qr_token = secrets.token_urlsafe(8)
     host_url = f"http://{ip}:{port}"
     img = qrcode.make(f"{host_url}/login?token={qr_token}")
-    os.makedirs("static", exist_ok=True)
+    os.makedirs("QR", exist_ok=True)
     os.makedirs(shared_folder, exist_ok=True)
-    img.save("static/qr.png")
+    img.save("QR/qr.png")
 
     initialization.init_db()
 

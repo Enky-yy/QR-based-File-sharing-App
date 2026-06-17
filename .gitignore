@@ -7,5 +7,6 @@ shared/*
 !shared/.gitkeep
 instance/
 *.db
-static/qr.png
+qr.png
+QR/
 secrets.txt
