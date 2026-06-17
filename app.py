@@ -26,7 +26,7 @@ socketio = SocketIO(app)
 # use export ENCRYPTION_KEY="YOUR_ENCRYPTION_KEY" before starting app to use upper version of secret key
 
 app.secret_key = 'key'
-ENCRYPTION_KEY = b'2yuGp9OW6nK0CKHnF-XhRJ89WWt6ua_iS6tjNWLArYk='
+ENCRYPTION_KEY = b'key'
 
 cipher = Fernet(ENCRYPTION_KEY)
 
