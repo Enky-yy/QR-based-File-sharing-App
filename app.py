@@ -277,6 +277,6 @@ if __name__ == '__main__':
     # app.run(host="0.0.0.0", port=port, debug=True)
 
     socketio.run(
-        app=app, host="0.0.0.0",port=port, debug=True
+        app=app, host="0.0.0.0",port=port, debug=True, allow_unsafe_werkzeug=True
     )
     
