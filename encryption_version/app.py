@@ -11,18 +11,33 @@ from werkzeug.security import(
     generate_password_hash,
     check_password_hash
 )
+from cryptography.fernet import Fernet
 from ai_addition import ocr_engine
 import uuid
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+# print(os.environ.get('SECRET_KEY'))
 
 app.secret_key = os.environ.get('SECRET_KEY')
+# use export SECRET_KEY="YOUR_SECRET_KEY" before starting app to use upper version of secret key
+
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+# use export ENCRYPTION_KEY="YOUR_ENCRYPTION_KEY" before starting app to use upper version of secret key
+
+# app.secret_key = 'key'
+# ENCRYPTION_KEY = b'key'
+
+# with open ('secrets.txt', 'r')as f:
+#     ENCRYPTION_KEY=f.read(-1)
+
+cipher = Fernet(ENCRYPTION_KEY)
 
 shared_folder = "shared"
 
 temporary_links={}
 
+# file_expiry_db={}
 
 
 def get_local_ip_add():
@@ -90,18 +105,19 @@ def choose_files():
 def search():
     query = request.args.get('q','').strip()
 
-
+    # print(query)
 
     if not query:
         return jsonify([])
 
     results = ocr_search.ocr_search(query)
+    # print(results)
 
     files = [
         result[0] for result in results
         
     ]
-
+    # print (files)
 
     return jsonify(files)
 
@@ -130,7 +146,17 @@ def upload():
             ocr_text= ocr_engine.extract(save_path)
             print('ocr: ',ocr_text)
 
-    
+        with open(save_path, 'rb') as f:
+            data = f.read()
+            # print(len(data))
+        
+
+        encrypted_data = cipher.encrypt(data)
+        # print(len(encrypted_data))
+
+        with open(save_path, 'wb') as f:
+            f.write(encrypted_data)
+
 
         historyUpload.upload(file_id,unique_filename,file.filename, request.remote_addr, all_functions.detect_device(request.headers.get('User-Agent')),time.strftime('%Y-%m-%d %H:%M:%S'), ocr_text)
 
@@ -163,12 +189,24 @@ def temp_download(token):
 
         return 'Link Expired'
     
+    # print(data['file'])
     
     path = os.path.join(shared_folder, data['file'])
 
+    with open(path,'rb') as f:
+        encrypted_data =f.read()
 
-    return send_from_directory(shared_folder, data['file'],as_attachment=True)
+    decrypted_data =cipher.decrypt(encrypted_data)
+    
+    return send_file(
+        io.BytesIO(decrypted_data),
+        download_name=data['file'],
+        as_attachment=True
+    )
 
+# @app.route('/download/<filename>')
+# def sharing(filename):
+#     return send_from_directory(shared_folder, filename, as_attachment=True)
 
 @app.route('/preview/<filename>')
 def preview_file(filename):
@@ -178,18 +216,21 @@ def preview_file(filename):
         filename
     )
 
-    # with open(path, 'rb') as f:
+    with open(path, 'rb') as f:
 
-    #     encrypted_data = f.read()
+        encrypted_data = f.read()
 
-    # decrypted_data =cipher.decrypt(encrypted_data)
-    # print(len(decrypted_data))
+    decrypted_data =cipher.decrypt(encrypted_data)
+    print(len(decrypted_data))
     # print(decrypted_data)
 
     original_name = filename.split('_',1)[1]
 
 
-    return send_from_directory(shared_folder, filename,as_attachment=False)
+    return send_file(
+        io.BytesIO(decrypted_data),
+        download_name=original_name
+    )
 
 @app.route('/delete/<file_id>', methods=['POST'])
 def delete_file(file_id):
@@ -225,14 +266,15 @@ if __name__ == '__main__':
     qr_token = secrets.token_urlsafe(8)
     host_url = f"http://{ip}:{port}"
     img = qrcode.make(f"{host_url}/login?token={qr_token}")
-    os.makedirs("static", exist_ok=True)
+    os.makedirs("QR", exist_ok=True)
     os.makedirs(shared_folder, exist_ok=True)
-    img.save("static/qr.png")
+    img.save("QR/qr.png")
 
     initialization.init_db()
 
     print(f"server is running on URL Address: {host_url}")
 
+    # app.run(host="0.0.0.0", port=port, debug=True)
 
     socketio.run(
         app=app, host="0.0.0.0",port=port, debug=True, allow_unsafe_werkzeug=True
