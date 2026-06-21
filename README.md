@@ -177,15 +177,6 @@ Scan the generated QR code from another device on the same network to access the
 * Cloud deployment support
 * End-to-end encrypted sharing between devices
 
-## Screenshots
-
-* Login Page
-* Upload Dashboard
-* QR Access
-* OCR Search
-* Upload History
-* File Preview
-
 ## Author
 
-Harshvardhan Shah
+Harsh Shah
